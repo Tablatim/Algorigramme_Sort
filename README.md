@@ -4,7 +4,7 @@
 
 • Trois algorithmes différents de tri sont montrés aléatoirement :<br>
 <blockquote>
-    - Tri par **Insertion**<br>
-    - Tri par **Selection**<br>
-    - Tri **'bubble sort'** *(tri par bulle)*
+    - Tri par <strong>Insertion</strong><br>
+    - Tri par <strong>Selection</strong><br>
+    - Tri <strong>'bubble sort'</strong> <em>(tri par bulle)</em>
 </blockquote>
