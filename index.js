@@ -1,14 +1,16 @@
-const SortModeNumber = 3
-const w = 20
-var msSleepingTime = 50
+const SortModeNumber = 3 // 3 : Selection, Insertion, Bubble
+const w = 10 //collums width => number of collumns
+const msSleepingTime = 50
+const collumnsColor = "rgb(51, 51, 51)"
+const changedCollumnsColor = "rgb(255, 0, 0)"
 
+// Global Var :
 var canvas = " "
 var tab = []
 var SortModeIndex = 0
 var h1 = ""
 
 function setup() {
-    //canv = createCanvas(1325,600)
     canv = createCanvas(windowWidth*0.95, windowHeight*0.95);
     canvas = document.getElementById('defaultCanvas0')
     canvas.style.border = "solid"
@@ -20,48 +22,64 @@ function setup() {
     frameRate(1000);
 }
 
+// drawing method
 function draw() {
+    previousTab = tab.slice()
     switch (SortModeIndex) {
         case 0:
             sort_insertion(tab)
             h1.innerHTML = "Sorted by Insertion"
-            msSleepingTime = Math.floor(msSleepingTime/1)
+            localMsSleepingTime = Math.floor(msSleepingTime/1)
             break;
         
         case 1:
             sort_selection(tab)
             h1.innerHTML = "Sorted by Selection"
-            msSleepingTime = Math.floor(msSleepingTime/1)
+            localMsSleepingTime = Math.floor(msSleepingTime/1)
             break;
         case 2:
             sort_bubble(tab)
             h1.innerHTML = "Sorted by Bubble"
-            msSleepingTime = Math.floor(msSleepingTime/5)
+            localMsSleepingTime = Math.floor(msSleepingTime/5)
             break;
     }
     clear();
-    drawArray(tab)
-    sleep(msSleepingTime)
+    drawArray(tab, previousTab)
+    sleep(localMsSleepingTime)
 }
 
-function arraysEqual(a, b) {
-    for (var i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) return false;
-    }
-    return true;
-}
-
-function drawArray(array) {
+function drawArray(array, previousTab) {
     for(i=0; i< array.length; i++) {
         h = array[i]*20
         x = i*w
-        y=canvas.height
-        fill(color(0, 0, 0));
+        y = canvas.height
+        r = findDifferencesIndex(array, previousTab)
+        if(r.includes(i)) {
+            fill(changedCollumnsColor);
+        } else {
+            fill(collumnsColor);
+        }
         strokeWeight(2);
-        stroke(51);
+        stroke(0);
         rect(x, y, w, -h)
     }
 }
+
+// update var
+
+function changeSortMode() {
+    //SortModeIndex = Math.floor(Math.random()*SortModeNumber);
+    SortModeIndex += 1
+    SortModeIndex %= SortModeNumber
+}
+
+function updateTab() {
+    tab = Array.from({length: canvas.width/w}, () => {
+        return Math.floor(Math.random() * 29) + 1;
+    })
+}
+
+// usefull method / functions :
 
 function sleep(milliseconds) {
     const date = Date.now();
@@ -71,14 +89,21 @@ function sleep(milliseconds) {
     } while (currentDate - date < milliseconds);
 }
 
-function changeSortMode() {
-    SortModeIndex = Math.floor(Math.random()*SortModeNumber);
+function isArraysEqual(array1, array2) {
+    for (var i = 0; i < array1.length; ++i) {
+        if (array1[i] !== array2[i]) return false;
+    }
+    return true;
 }
 
-function updateTab() {
-    tab = Array.from({length: canvas.width/w}, () => {
-        return Math.floor(Math.random() * 29) + 1;
-    })
+function findDifferencesIndex(array1, array2) {
+    r = []
+    for(m=0; m<array1.length; m++) {
+        if(array1[m] != array2[m]){
+            r.push(m)
+        }
+    }
+    return r
 }
 
 // Sorting algorithms :
@@ -101,7 +126,7 @@ function justsort(array) {
 function sort_selection(array) {
     const res = array.slice()
     temp = array.slice()
-    if(arraysEqual(array, justsort(temp))) {
+    if(isArraysEqual(array, justsort(temp))) {
         updateTab()
         changeSortMode()
         sleep(msSleepingTime*4)
@@ -117,7 +142,7 @@ function sort_selection(array) {
         var tmp = array[i];
         array[i] = array[min];
         array[min] = tmp;
-        if(!arraysEqual(res, array)) return array
+        if(!isArraysEqual(res, array)) return array
     }
     return array
 }
@@ -125,7 +150,7 @@ function sort_selection(array) {
 function sort_insertion(array) {
     const res = array.slice()
     temp = array.slice()
-    if(arraysEqual(array, justsort(temp))) {
+    if(isArraysEqual(array, justsort(temp))) {
         updateTab()
         changeSortMode()
         sleep(msSleepingTime*4)
@@ -142,7 +167,7 @@ function sort_insertion(array) {
             j--
         }
         array[j+1] = tmp
-        if(!arraysEqual(res, array)) return array
+        if(!isArraysEqual(res, array)) return array
     }
     return array
 }
@@ -150,7 +175,7 @@ function sort_insertion(array) {
 function sort_bubble(array){
     const res = array.slice()
     temp = array.slice()
-    if(arraysEqual(array, justsort(temp))) {
+    if(isArraysEqual(array, justsort(temp))) {
         updateTab()
         changeSortMode()
         sleep(msSleepingTime*4)
@@ -164,7 +189,7 @@ function sort_bubble(array){
                 array[j] = array[j + 1];
                 array[j + 1] = tmp;
             }
-            if(!arraysEqual(res, array)) return array
+            if(!isArraysEqual(res, array)) return array
         }
     }
     return array;
