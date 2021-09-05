@@ -1,11 +1,12 @@
-<h1>Algorigramme de tri</h1>
+<h1>Sorting Algorigram</h1>
 
-• "<code>p5.js</code>" => Librairie nécessaire pour le dessin du canvas,<br>le code se verra peut etre modifier pour un code en vanilla JS.
+• "<code>p5.js</code>" => Library necessary for drawing the canvas,
+the code may be modified for a JS vanilla code.
 
-• Trois algorithmes différents de tri sont montrés :<br>
+• Three different sorting algorithms are shown:<br>
 <blockquote>
-    - Tri par <strong>Insertion</strong><br>
-    - Tri par <strong>Selection</strong><br>
-    - Tri <strong>'bubble sort'</strong> <em>(tri par bulle)</em><br>
-    - Tri dit <strong>Rapide</strong><em>(QuickSort)</em><br>
+    - Sort by <strong>Insertion</strong><br>
+    - Sort by <strong>Selection</strong><br>
+    - <strong>Buble</strong> Sort<br>
+    - <strong>Quick</strong> Sort<br>
 </blockquote>
