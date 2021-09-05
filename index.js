@@ -1,6 +1,6 @@
 const SortModeNumber = 3 // 3 : Selection, Insertion, Bubble
 const w = 10 //collums width => number of collumns
-const msSleepingTime = 50
+var msSleepingTime = 50
 const collumnsColor = "rgb(51, 51, 51)"
 const changedCollumnsColor = "rgb(255, 0, 0)"
 
@@ -9,15 +9,36 @@ var canvas = " "
 var tab = []
 var SortModeIndex = 0
 var h1 = ""
+var speedSlider = ""
+var resetBtn = ""
 
 function setup() {
-    canv = createCanvas(windowWidth*0.95, windowHeight*0.95);
-    canvas = document.getElementById('defaultCanvas0')
-    canvas.style.border = "solid"
-    canvas.style.position = "absolute"
-    canvas.style.padding = "0"
+    canv = createCanvas(windowWidth*0.985, windowHeight*0.85);
+        canvas = document.getElementById('defaultCanvas0')
+        canvas.style.border = "solid"
+        canvas.style.position = "absolute"
+        canvas.style.padding = "0"
+    main = document.querySelector('main')
     h1 = document.createElement("h1");
-    document.body.appendChild(h1);
+        h1.style.margin = "0"
+        document.body.appendChild(h1);
+    h1.after(main)
+    speedSlider = document.createElement("input");
+        speedSlider.type = "range"
+        speedSlider.min = 0
+        speedSlider.max = 200
+        speedSlider.value = speedSlider.max - msSleepingTime
+        speedSlider.setAttribute("oninput", "updateSleepingTime()");
+        document.body.appendChild(speedSlider);
+    speedSlider.after(main)
+    resetBtn = document.createElement("input");
+        resetBtn.type = "submit"
+        resetBtn.value = "Reset speed (150)"
+        resetBtn.style.display = "none"
+        resetBtn.style.margin = 0
+        resetBtn.setAttribute("onclick", "speedSlider.value = 150; msSleepingTime = 50");
+        document.body.appendChild(resetBtn);
+    resetBtn.after(main)
     updateTab()
     frameRate(1000);
 }
@@ -25,21 +46,26 @@ function setup() {
 // drawing method
 function draw() {
     previousTab = tab.slice()
+    if(msSleepingTime != 50) {
+        resetBtn.style.display = ""
+    } else {
+        resetBtn.style.display = "none"
+    }
     switch (SortModeIndex) {
         case 0:
             sort_insertion(tab)
-            h1.innerHTML = "Sorted by Insertion"
+            h1.innerHTML = `Sorted by <u>Insertion</u> (speed: ${speedSlider.max - msSleepingTime})`
             localMsSleepingTime = Math.floor(msSleepingTime/1)
             break;
         
         case 1:
             sort_selection(tab)
-            h1.innerHTML = "Sorted by Selection"
+            h1.innerHTML = `Sorted by <u>Selection</u> (speed: ${speedSlider.max - msSleepingTime})`
             localMsSleepingTime = Math.floor(msSleepingTime/1)
             break;
         case 2:
             sort_bubble(tab)
-            h1.innerHTML = "Sorted by Bubble"
+            h1.innerHTML = `Sorted by <u>Bubble</u> (speed: ${speedSlider.max - msSleepingTime})`
             localMsSleepingTime = Math.floor(msSleepingTime/5)
             break;
     }
@@ -67,6 +93,10 @@ function drawArray(array, previousTab) {
 
 // update var
 
+function updateSleepingTime() {
+    msSleepingTime = speedSlider.max - speedSlider.value
+}
+
 function changeSortMode() {
     //SortModeIndex = Math.floor(Math.random()*SortModeNumber);
     SortModeIndex += 1
@@ -75,7 +105,7 @@ function changeSortMode() {
 
 function updateTab() {
     tab = Array.from({length: canvas.width/w}, () => {
-        return Math.floor(Math.random() * 29) + 1;
+        return Math.floor(Math.random() * canvas.height/21) + 1;
     })
 }
 
