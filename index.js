@@ -6,6 +6,7 @@ const constSleepingTime = 50
 var doChangeAfter = true
 
 // Global Var :
+var wH, wW = 0
 var msSleepingTime = constSleepingTime
 var canvas = " "
 var tab = []
@@ -13,6 +14,7 @@ var SortModeIndex = 0
 var h1 = ""
 var speedSlider = ""
 var resetBtn = ""
+var checkDoChangeAfter = ""
 
 function setup() {
     canv = createCanvas(windowWidth*0.985, windowHeight*0.8);
@@ -21,6 +23,8 @@ function setup() {
         canvas.style.position = "absolute"
         canvas.style.padding = "0"
     main = document.querySelector('main')
+    wH, wW = windowHeight, windowWidth
+    main.style.textAlign = "initial"
     h1 = document.createElement("h1");
         h1.style.margin = "0"
         document.body.appendChild(h1);
@@ -60,6 +64,9 @@ function setup() {
         labelCheckDoChangeAfter.style.margin = "0px 0px 0px 10px"
         labelCheckDoChangeAfter.innerHTML = "| Change sorting mode after sorting :"
     document.body.appendChild(labelCheckDoChangeAfter);
+    labelCheckDoChangeAfter.addEventListener('click', event => {
+        doChangeAfter = !doChangeAfter
+    })
     checkDoChangeAfter = document.createElement("input");
         checkDoChangeAfter.type = "checkbox"
         checkDoChangeAfter.label = `Next Sort Mode`
@@ -80,8 +87,9 @@ function setup() {
     frameRate(1000);
 }
 
-// drawing method
+// drawing methods
 function draw() {
+    checkDoChangeAfter.checked = doChangeAfter
     previousTab = tab.slice()
     if(msSleepingTime != 50) {
         resetBtn.style.display = ""
@@ -129,7 +137,6 @@ function drawArray(array, previousTab) {
 }
 
 // update var
-
 function updateSleepingTime() {
     msSleepingTime = speedSlider.max - speedSlider.value
 }
@@ -145,8 +152,7 @@ function updateTab() {
     })
 }
 
-// usefull method / functions :
-
+// useful methods / functions :
 function sleep(milliseconds) {
     const date = Date.now();
     let currentDate = null;
@@ -172,10 +178,8 @@ function findDifferencesIndex(array1, array2) {
     return r
 }
 
-// Space = pause; N = next sort mode
-
+// Events :
 document.addEventListener("keypress", function(event) {
-    console.log(event.code)
     if (event.code == "Space") {
       alert('Pause, click "OK" or Space key to continue.');
     }else if (event.code === "KeyN") {
@@ -183,8 +187,21 @@ document.addEventListener("keypress", function(event) {
     }
 });
 
-// Sorting algorithms :
+window.addEventListener('resize', function(event){
+    resizeCanvas(windowWidth*0.985, windowHeight*0.8);
+    if(wW > windowWidth)
+        tab = tab.slice(0, canvas.width/w)
+    else if(wW < windowWidth) {
+        newlength = canvas.width/w
+        for(i = tab.length; i<newlength; i++) {
+            tab.push(Math.floor(Math.random() * canvas.height/21) + 1)
+        }
+    }
+});
 
+
+
+// Sorting algorithms :
 function justsort(array) {
     for(var i = 0; i < array.length; i++){
         var min = i; 
