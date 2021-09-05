@@ -1,10 +1,12 @@
 const SortModeNumber = 3 // 3 : Selection, Insertion, Bubble
 const w = 10 //collums width => number of collumns
-var msSleepingTime = 50
 const collumnsColor = "rgb(51, 51, 51)"
 const changedCollumnsColor = "rgb(255, 0, 0)"
+const constSleepingTime = 50
+var doChangeAfter = true
 
 // Global Var :
+var msSleepingTime = constSleepingTime
 var canvas = " "
 var tab = []
 var SortModeIndex = 0
@@ -13,7 +15,7 @@ var speedSlider = ""
 var resetBtn = ""
 
 function setup() {
-    canv = createCanvas(windowWidth*0.985, windowHeight*0.85);
+    canv = createCanvas(windowWidth*0.985, windowHeight*0.8);
         canvas = document.getElementById('defaultCanvas0')
         canvas.style.border = "solid"
         canvas.style.position = "absolute"
@@ -23,22 +25,57 @@ function setup() {
         h1.style.margin = "0"
         document.body.appendChild(h1);
     h1.after(main)
+    labelSpeedSlider = document.createElement("label");
+        labelSpeedSlider.for = "speedSlider"
+        labelSpeedSlider.style.margin = "0px 0px 0px 10px"
+        labelSpeedSlider.innerHTML = "Speed :"
+    document.body.appendChild(labelSpeedSlider);
     speedSlider = document.createElement("input");
         speedSlider.type = "range"
         speedSlider.min = 0
         speedSlider.max = 200
         speedSlider.value = speedSlider.max - msSleepingTime
+        speedSlider.setAttribute("id", "speedSlider");
         speedSlider.setAttribute("oninput", "updateSleepingTime()");
         document.body.appendChild(speedSlider);
     speedSlider.after(main)
     resetBtn = document.createElement("input");
         resetBtn.type = "submit"
-        resetBtn.value = "Reset speed (150)"
+        resetBtn.value = `Reset speed (${speedSlider.max - msSleepingTime})`
         resetBtn.style.display = "none"
         resetBtn.style.margin = 0
-        resetBtn.setAttribute("onclick", "speedSlider.value = 150; msSleepingTime = 50");
+        resetBtn.setAttribute("onclick", `speedSlider.value = ${speedSlider.max - msSleepingTime}; msSleepingTime = ${constSleepingTime}`);
         document.body.appendChild(resetBtn);
     resetBtn.after(main)
+    nextSortMode = document.createElement("input");
+        nextSortMode.type = "submit"
+        nextSortMode.value = `Next Sort Mode`
+        nextSortMode.style.margin = 0
+        nextSortMode.style.margin = 0
+        nextSortMode.setAttribute("onclick", `changeSortMode()`);
+        document.body.appendChild(nextSortMode);
+    nextSortMode.after(main)
+    labelCheckDoChangeAfter = document.createElement("label");
+        labelCheckDoChangeAfter.for = "doChangeAfter"
+        labelCheckDoChangeAfter.style.margin = "0px 0px 0px 10px"
+        labelCheckDoChangeAfter.innerHTML = "| Change sorting mode after sorting :"
+    document.body.appendChild(labelCheckDoChangeAfter);
+    checkDoChangeAfter = document.createElement("input");
+        checkDoChangeAfter.type = "checkbox"
+        checkDoChangeAfter.label = `Next Sort Mode`
+        checkDoChangeAfter.style.margin = "0px 0px 0px 8px"
+        checkDoChangeAfter.style.padding = "10px"
+        checkDoChangeAfter.checked = doChangeAfter
+        checkDoChangeAfter.setAttribute("id", `doChangeAfter`);
+        checkDoChangeAfter.setAttribute("onclick", `doChangeAfter = !doChangeAfter`);
+        document.body.appendChild(checkDoChangeAfter);
+    checkDoChangeAfter.after(main)
+    h2 = document.createElement("h3");
+        h2.style.margin = "0"
+        h2.style.padding = "0"
+        h2.innerHTML = "Space for pause, N key for next sort mode"
+        document.body.appendChild(h2);
+    h2.after(main)
     updateTab()
     frameRate(1000);
 }
@@ -98,7 +135,6 @@ function updateSleepingTime() {
 }
 
 function changeSortMode() {
-    //SortModeIndex = Math.floor(Math.random()*SortModeNumber);
     SortModeIndex += 1
     SortModeIndex %= SortModeNumber
 }
@@ -136,6 +172,17 @@ function findDifferencesIndex(array1, array2) {
     return r
 }
 
+// Space = pause; N = next sort mode
+
+document.addEventListener("keypress", function(event) {
+    console.log(event.code)
+    if (event.code == "Space") {
+      alert('Pause, click "OK" or Space key to continue.');
+    }else if (event.code === "KeyN") {
+      changeSortMode()
+    }
+});
+
 // Sorting algorithms :
 
 function justsort(array) {
@@ -158,7 +205,7 @@ function sort_selection(array) {
     temp = array.slice()
     if(isArraysEqual(array, justsort(temp))) {
         updateTab()
-        changeSortMode()
+        if(doChangeAfter) changeSortMode()
         sleep(msSleepingTime*4)
         return tab
     }
@@ -182,7 +229,7 @@ function sort_insertion(array) {
     temp = array.slice()
     if(isArraysEqual(array, justsort(temp))) {
         updateTab()
-        changeSortMode()
+        if(doChangeAfter) changeSortMode()
         sleep(msSleepingTime*4)
         return tab
     }
@@ -207,7 +254,7 @@ function sort_bubble(array){
     temp = array.slice()
     if(isArraysEqual(array, justsort(temp))) {
         updateTab()
-        changeSortMode()
+        if(doChangeAfter) changeSortMode()
         sleep(msSleepingTime*4)
         return tab
     }
