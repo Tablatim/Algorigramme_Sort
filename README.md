@@ -6,5 +6,6 @@
 <blockquote>
     - Tri par <strong>Insertion</strong><br>
     - Tri par <strong>Selection</strong><br>
-    - Tri <strong>'bubble sort'</strong> <em>(tri par bulle)</em>
+    - Tri <strong>'bubble sort'</strong> <em>(tri par bulle)</em><br>
+    - Tri dit <strong>Rapide</strong><em>(QuickSort)</em><br>
 </blockquote>
