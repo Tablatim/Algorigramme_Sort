@@ -1,4 +1,4 @@
-const SortModeNumber = 3 // 3 : Selection, Insertion, Bubble
+const SortModeNumber = 4 // : Selection, Insertion, Bubble, QuickSort
 const w = 10 //collums width => number of collumns
 const collumnsColor = "rgb(51, 51, 51)"
 const changedCollumnsColor = "rgb(255, 0, 0)"
@@ -111,8 +111,13 @@ function draw() {
             break;
         case 2:
             sort_bubble(tab)
-            h1.innerHTML = `Sorted by <u>Bubble</u> (speed: ${speedSlider.max - msSleepingTime})`
+            h1.innerHTML = `Sorted by <u>BubbleSort</u> (speed: ${speedSlider.max - msSleepingTime})`
             localMsSleepingTime = Math.floor(msSleepingTime/5)
+            break;
+        case 3:
+            sort_quick(tab)
+            h1.innerHTML = `Sorted by <u>QuickSort</u> (speed: ${speedSlider.max - msSleepingTime})`
+            localMsSleepingTime = Math.floor(msSleepingTime*2)
             break;
     }
     clear();
@@ -288,4 +293,40 @@ function sort_bubble(array){
         }
     }
     return array;
+}
+
+function sort_quick(array) {
+    const res = array.slice()
+    temp = array.slice()
+    if(isArraysEqual(array, justsort(temp))) {
+        updateTab()
+        if(doChangeAfter) changeSortMode()
+        sleep(msSleepingTime*4)
+        return tab
+    }
+    stack = [];
+    stack.push(0);
+    stack.push(array.length - 1);
+    while(stack[stack.length - 1] >= 0){
+        end = stack.pop();
+        start = stack.pop();
+        const pivotValue = array[end];
+        let pivotIndex = start; 
+        for (let i = start; i < end; i++) {
+            if (array[i] < pivotValue) {
+            [array[i], array[pivotIndex]] = [array[pivotIndex], array[i]];
+            pivotIndex++;
+            }
+        }
+        [array[pivotIndex], array[end]] = [array[end], array[pivotIndex]] 
+        if (pivotIndex - 1 > start){
+            stack.push(start);
+            stack.push(pivotIndex - 1);
+        }
+        if (pivotIndex + 1 < end){
+            stack.push(pivotIndex + 1);
+            stack.push(end);
+        }
+        if(!isArraysEqual(res, array)) return array
+    }
 }
