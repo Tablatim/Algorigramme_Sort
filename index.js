@@ -47,7 +47,7 @@ function setup() {
         resetBtn.type = "submit"
         resetBtn.value = `Reset speed (${speedSlider.max - msSleepingTime})`
         resetBtn.style.display = "none"
-        resetBtn.style.margin = 0
+        resetBtn.style.margin = "0px 10px 0px 10px"
         resetBtn.setAttribute("onclick", `speedSlider.value = ${speedSlider.max - msSleepingTime}; msSleepingTime = ${constSleepingTime}`);
         document.body.appendChild(resetBtn);
     resetBtn.after(main)
@@ -89,6 +89,7 @@ function setup() {
 
 // drawing methods
 function draw() {
+    onresize()
     checkDoChangeAfter.checked = doChangeAfter
     previousTab = tab.slice()
     if(msSleepingTime != 50) {
@@ -178,16 +179,7 @@ function findDifferencesIndex(array1, array2) {
     return r
 }
 
-// Events :
-document.addEventListener("keypress", function(event) {
-    if (event.code == "Space") {
-      alert('Pause, click "OK" or Space key to continue.');
-    }else if (event.code === "KeyN") {
-      changeSortMode()
-    }
-});
-
-window.addEventListener('resize', function(event){
+function onresize() {
     resizeCanvas(windowWidth*0.985, windowHeight*0.8);
     if(wW > windowWidth)
         tab = tab.slice(0, canvas.width/w)
@@ -197,9 +189,18 @@ window.addEventListener('resize', function(event){
             tab.push(Math.floor(Math.random() * canvas.height/21) + 1)
         }
     }
+    wW = windowWidth
+    wH = windowHeight
+}
+
+// Event :
+document.addEventListener("keypress", function(event) {
+    if (event.code == "Space") {
+      alert('Pause, click "OK" or Space key to continue.');
+    }else if (event.code === "KeyN") {
+      changeSortMode()
+    }
 });
-
-
 
 // Sorting algorithms :
 function justsort(array) {
