@@ -127,9 +127,10 @@ function draw() {
 
 function drawArray(array, previousTab) {
     for(i=0; i< array.length; i++) {
-        h = array[i]*20
-        x = i*w
-        y = canvas.height
+        h = array[i]*15
+        w_here = canv.width/array.length
+        x = i*w_here
+        y = canv.height
         r = findDifferencesIndex(array, previousTab)
         if(r.includes(i)) {
             fill(changedCollumnsColor);
@@ -138,7 +139,7 @@ function drawArray(array, previousTab) {
         }
         strokeWeight(2);
         stroke(0);
-        rect(x, y, w, -h)
+        rect(x, y, w_here, -h)
     }
 }
 
@@ -154,7 +155,7 @@ function changeSortMode() {
 
 function updateTab() {
     tab = Array.from({length: canvas.width/w}, () => {
-        return Math.floor(Math.random() * canvas.height/21) + 1;
+        return Math.floor(Math.random() * canvas.height/31) + 1;
     })
 }
 
@@ -185,14 +186,14 @@ function findDifferencesIndex(array1, array2) {
 }
 
 function onresize() {
-    resizeCanvas(windowWidth*0.985, windowHeight*0.8);
+    resizeCanvas(windowWidth*0.98, windowHeight*0.8);
     if(wW > windowWidth)
         tab = tab.slice(0, canvas.width/w)
     else if(wW < windowWidth) {
         newlength = canvas.width/w
-        for(i = tab.length; i<newlength; i++) {
-            tab.push(Math.floor(Math.random() * canvas.height/21) + 1)
-        }
+        // for(i = tab.length; i<newlength; i++) {
+        //     tab.push(Math.floor(Math.random() * canvas.height/21) + 1)
+        // }
     }
     wW = windowWidth
     wH = windowHeight
